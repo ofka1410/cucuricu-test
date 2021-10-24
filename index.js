@@ -1,5 +1,4 @@
 let drones=[]
-let speed= 60
 let heights=[]
 let takeOffs=[]
   let bussy_heights=[]
@@ -20,7 +19,7 @@ const setDrones_heights=()=>{
            height:0,
            distance:getRandomInt(),
            time_left:0,
-           time_left_person_reaches:Math.floor(Math.random() * 15)
+           time_left_person_reached:Math.floor(Math.random() * 15)
           }
         )
     }
@@ -29,7 +28,7 @@ const setDrones_heights=()=>{
             heights.push(number)  
     }
     height_free=heights
-    console.log(height_free)
+  
     for(let i=1;i<240;i++){
          status_update()  
         }
@@ -41,8 +40,9 @@ const status_update=()=>{
     for(let i=0;i<drones.length;i++){
         if(!drones[i].flyAprroved){
 
-        drones[i].time_left_person_reaches-=1
-        if(drones[i].time_left_person_reaches==0){
+        drones[i].time_left_person_reached-=1
+        if(drones[i].time_left_person_reached>=0){
+            console.log(`A person reached to ${drones[i].drone }`)
             take_off(drones[i])
         }
     }
@@ -60,10 +60,10 @@ const status_update=()=>{
 const landed=(drone)=>{
 drone.distance=0
 drone.flyAprroved=false
-console.log(`${drone.drone} finnishd is fly succsefully`)
+console.log(`${drone.drone} landed `)
 height_free.push(drone.height)
 bussy_heights=bussy_heights.filter(el=>el!==drone.height)
-drone.time_left_person_reaches=Math.floor(Math.random() * 15)
+drone.time_left_person_reached=Math.floor(Math.random() * 15)
 drone.distance=getRandomInt()
 drone.time_left=`${drone.distance/1000} minutes left`
 }
@@ -74,7 +74,7 @@ const on_flight=(drone)=>{
     }
     drone.distance-=1000
     drone.time_left=`${drone.distance/1000} minutes left`
-     console.log(drone)
+    
 }
 
 const take_off=(drone)=>{
@@ -86,11 +86,14 @@ const take_off=(drone)=>{
             let avialable_height=height_free[index_height]
             bussy_heights.push(height_free[index_height])
             height_free.splice(index_height,1)
-                  console.log(height_free)
+                  
                 drone.height=avialable_height
                 drone.time_left=drone.distance/10
                 console.log(`${drone.drone} premission aprroved, at height : ${avialable_height}`)
      
+        }
+        else{
+            console.log(`${drone.drone} Premission denied, please wait for free height`)  
         }
 }
 
